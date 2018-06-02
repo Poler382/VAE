@@ -1,0 +1,298 @@
+\documentclass[12pt]{jsarticle}  
+\usepackage[dvipdfm,left=1.5cm,right=1.5cm,top=2cm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{bm}
+\usepackage{comment}
+\usepackage{framed}
+\usepackage{tabularx}
+
+\setlength{\topmargin}{-1in}
+\addtolength{\topmargin}{5mm}
+\setlength{\headheight}{5mm}
+\setlength{\headsep}{0mm}
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-25mm}
+\setlength{\footskip}{5mm}
+
+\newcommand{\frontpage}[3]{%
+\begin{center}
+　\\
+\vspace{15em}{\LARGE{}レポート課題}\\
+　\\
+{\Huge\bf#1}\\
+\vspace{30em}
+{\LARGE\today}\\
+\vspace{2em}
+{\LARGE#2　#3}
+\end{center}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+}
+
+\newcommand{\result}[5]{
+\begin{minipage}{0.05\hsize}
+(#1)
+\end{minipage}
+\begin{minipage}{0.22\hsize}
+\includegraphics[width=\linewidth]{#2}j
+\end{minipage}
+\begin{minipage}{0.22\hsize}
+\includegraphics[width=\linewidth]{#3}
+\end{minipage}
+\begin{minipage}{0.22\hsize}
+\includegraphics[width=\linewidth]{#4}
+\end{minipage}
+\begin{minipage}{0.22\hsize}
+\includegraphics[width=\linewidth]{#5}
+\end{minipage}
+\\
+}
+
+\begin{document}
+
+\frontpage
+{変分自己符号化器の特性評価}
+{S152008}
+{石綱　咲希}
+
+\section{実験目的}
+
+高精度な生成モデルとして有力視されている変分自己符号化器の原理および特性について理解する．
+
+\section{実験原理}
+
+\subsection{変分自己符号化器（Variational Autoencoder，VAE）}
+
+変分自己符号化器について説明する．
+以下の疑問に対する答えが含まれているようにすること．
+\begin{itemize}
+\item 変分自己符号化器のねらい．前回の実験で扱った自己符号化器との違いがわかるようにすること．
+\item 変分自己符号化器の全体構成．演習課題の構成を図示し，各構成要素の役割および計算の流れを説明すること．
+\item 再構成誤差および潜在誤差の定義とその意味．それぞれの数式が何を表しているか（特に$D_{KL}$の意味），および最小化することで何を達成しようとしているかがわかるようにすること．
+\item 学習方法．演習課題を例に各パラメータの学習方法について数式を用いて具体的に説明すること．
+\end{itemize}
+
+変分自己符号化器は自己符号化器とは異なり，潜在変数z(入力をエンコーダに通した値)に確率分布$N(0,1)$を仮定するというものである．
+
+\section{実験方法}
+
+
+以下の各実験項目について，具体的な実験方法を設計し，説明する．
+実験データにはMNISTデータセットを用いること．
+実験条件ごとに番号をつけ，確認したい項目および実験結果の再現に必要な条件（ネットワーク構成，目的関数，パラメータの初期化方法，パラメータの更新方法，学習回数，学習およびテストデータ数など）を明記すること．
+
+
+\subsection{自己符号化器の再構成精度および入力分布と出力分布の対応}
+
+再構成精度が高くなるように自己符号化器を設計し，学習を行う．
+学習の進行状況を確認するために，学習データおよびテストデータに対する再構成誤差および潜在誤差の変化を表すグラフを作成する．
+また，学習結果を確認するために，学習データおよびテストデータに対する復号化器の出力を画像化する．加えて，入力した学習データの分布と出力された復号画像の分布を比較するために，画像中の適当な位置（中心付近が良い）を数点選択し，度数分布図を作成する．
+
+少なくとも2種類の構成を比較し，再構成精度を高める上で重要と考えられる要因が分析できるようにすること．再構成誤差には二乗和誤差およびクロスエントロピーを用い，両者を比較すること．
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder 1の構成(実験条件1)}
+\label{table:Encorder1-1}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$784$，出力ノード数:$100$ \\
+\hline
+2 & 活性化層 & Tanh \\
+\hline
+3 & Affine層 & 入力ノード数:$100$，出力ノード数:$100$ \\
+\hline
+4 & 活性化層 & Tanh
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder 1の構成(実験条件1)}
+\label{table:Encorder1-2}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 &  &  \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder μの構成(実験条件1.2，2.2)}
+\label{table:Encorder mu-1}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$2$ \\
+\hline
+2 & 活性化層 & Sigmoid \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder μの構成(実験条件1.2，2.2)}
+\label{table:Encorder mu-2}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$20$ \\
+\hline
+2 & 活性化層 & Sigmoid \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder μの構成(実験条件1.2，2.2)}
+\label{table:Encorder mu-3}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$2$ \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder μの構成(実験条件1.2，2.2)}
+\label{table:Encorder mu-4}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$20$ \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder σの構成(実験条件1.2，2.2)}
+\label{table:Encorder sigma-1}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$20$ \\
+\hline
+2 & 活性化層 & Sigmoid \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder σの構成(実験条件1.2，2.2)}
+\label{table:Encorder sigma-2}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$2$ \\
+\hline
+2 & 活性化層 & Sigmoid \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder σの構成(実験条件1.2，2.2)}
+\label{table:Encorder sigma-3}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$2$ \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+\begin{table}[bt]
+\begin{center}
+\caption{Encorder σの構成(実験条件1.2，2.2)}
+\label{table:Encorder sigma-4}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$100$，出力ノード数:$20$ \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+\begin{table}[bt]
+\begin{center}
+\caption{Decordeの構成(実験条件1.2，2.2)}
+\label{table:Decorder}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$2$，出力ノード数:$100$ \\
+\hline
+2 & 活性化層 & Tanh \\
+\hline
+3 & Affine層 & 入力ノード数:$100$，出力ノード数:$100$ \\
+\hline
+4 & 活性化層 & Tanh \\
+\hline
+5 & Affine層 & 入力ノード数:$100$，出力ノード数:$784$ \\
+\hline
+6 & 活性化層 & Sigmoid \\
+\hline
+
+\end{tabularx}
+\end{center}
+\end{table}
+
+\begin{table}[bt]
+\begin{center}
+\caption{Decordeの構成(実験条件1.2，2.2)}
+\label{table:Decorder}
+\begin{tabularx}{0.9\linewidth}{|l|l|X|}
+\hline
+1 & Affine層 & 入力ノード数:$20$，出力ノード数:$100$ \\
+\hline
+2 & 活性化層 & Tanh \\
+\hline
+3 & Affine層 & 入力ノード数:$100$，出力ノード数:$100$ \\
+\hline
+4 & 活性化層 & Tanh \\
+\hline
+5 & Affine層 & 入力ノード数:$100$，出力ノード数:$784$ \\
+\hline
+6 & 活性化層 & Sigmoid \\
+\hline
+\end{tabularx}
+\end{center}
+\end{table}
+
+
+
+\subsection{潜在変数の分布と出力分布の対応}
+
+潜在変数$z$の次元を2とし，自己符号化器の学習を行う．学習後，$z$の値を(-2,-2)から(2,2)まで変化させ，復号化器の出力を画像化する．出力画像はzの平面上の位置関係を保つように並べること．
+
+潜在変数$z$の次元を20とし，自己符号化器の学習を行う．学習後，異なる数字の学習データの組$x_1$および$x_2$に対応する潜在変数$z_1$および$z_2$の線形結合$z=t z_1+(1-t) z_2$における$t$の値を1から0まで変化させ，復号化器の出力を画像化する．出力画像は$t$の直線上の位置関係を保つように並べること．
+
+
+
+\section{実験結果}
+
+実験項目ごとに，実験条件を示し，対応する結果（グラフもしくは画像）を示す．
+
+\section{考察}
+
+実験結果をもとに，再構成精度を高める上で重要と考えられる要因について分析する．また，入力および出力分布の比較結果について考察する．
+
+潜在変数の分布をもとに，各数字の潜在空間における位置関係の意味について検討する．潜在変数の次元の違いによる影響についても考察すること．
+
+\end{document}
+
+
