@@ -1,4 +1,4 @@
-\documentclass[12pt]{jsarticle}  
+\documentclass[12pt]{jsarticle}
 \usepackage[dvipdfm,left=1.5cm,right=1.5cm,top=2cm]{geometry}
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{amsmath, amssymb}
@@ -14,6 +14,8 @@
 \setlength{\textheight}{\paperheight}
 \addtolength{\textheight}{-25mm}
 \setlength{\footskip}{5mm}
+
+\graphicspath{{image/}}
 
 \newcommand{\frontpage}[3]{%
 \begin{center}
@@ -54,8 +56,8 @@
 
 \frontpage
 {変分自己符号化器の特性評価}
-{S152008}
-{石綱　咲希}
+{S152114}
+{宮地　雄也}
 
 \section{実験目的}
 
@@ -74,14 +76,65 @@
 \item 学習方法．演習課題を例に各パラメータの学習方法について数式を用いて具体的に説明すること．
 \end{itemize}
 
-変分自己符号化器は自己符号化器とは異なり，潜在変数z(入力をエンコーダに通した値)に確率分布$N(0,1)$を仮定するというものである．
 
+
+**************************************
+
+
+変分自己符号化器は自己符号化器とは異なり，潜在変数z(入力をエンコーダに通した値)に確率分布$N(0,1)$を仮定するというものである．
+通常のオートエンコーダーは潜在変数にその特徴量を阻止込めているが，変分オートエンコーダーは潜在変数を確率分布に$N(0,1)$と仮定することで，
+よく似た形状のものを教師データがなくとも近い分布配置になる．
+大まかなVAEのネットワークを図1に示す
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width = 12cm]{VAE＿image.png}
+    \caption{VAEイメージ図}
+  \end{center}
+\end{figure}
+
+VAEの構成は大きく分けて，古典的なAEと同じようにエンコーダー部分とデコーダー部分に分けることができる．
+潜在変数にするまでがエンコーダー部分で，そこから画像に変換する部分がデコーダー部分に値する．
+分散と平均から潜在確率を出力し，$D_{KL}$で精度を確認する．
+
+今回，実験で使用したネットワーク構成を図２に示す．
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width = 12cm]{VAE_detail.png}
+    \caption{VAEイメージ図}
+  \end{center}
+\end{figure}
+
+それぞれ計算は以下の通り．
+
+\[
+  \mu(x) = sigmoid (\sum_{i} (Wx+b))
+\]
+
+\[
+  \sigma(x) = sigmoid ( \sum_{i} (Wx+b))
+\]
+
+
+\[
+  z(x) = \mu(x)  + ( \sigma(x)+\epsilon)
+\]
+
+
+
+
+\clearpage
 \section{実験方法}
 
 
 以下の各実験項目について，具体的な実験方法を設計し，説明する．
 実験データにはMNISTデータセットを用いること．
 実験条件ごとに番号をつけ，確認したい項目および実験結果の再現に必要な条件（ネットワーク構成，目的関数，パラメータの初期化方法，パラメータの更新方法，学習回数，学習およびテストデータ数など）を明記すること．
+******************************
+
+
+実験はMNISTデータセットを用いて以下のように行った．
 
 
 \subsection{自己符号化器の再構成精度および入力分布と出力分布の対応}
@@ -294,5 +347,3 @@
 潜在変数の分布をもとに，各数字の潜在空間における位置関係の意味について検討する．潜在変数の次元の違いによる影響についても考察すること．
 
 \end{document}
-
-
